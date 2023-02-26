@@ -5,13 +5,11 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
-#include "Damagable.h"
-#include "Interactable.h"
 #include "TP_ThirdPersonCharacter.generated.h"
 
 
 UCLASS(config=Game)
-class ATP_ThirdPersonCharacter : public ACharacter, public IDamagable
+class ATP_ThirdPersonCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
@@ -39,14 +37,6 @@ class ATP_ThirdPersonCharacter : public ACharacter, public IDamagable
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* LookAction;
 
-	/** Crouch Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* CrouchAction;
-
-	/** Interact Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* InteractAction;
-
 public:
 	ATP_ThirdPersonCharacter();
 	
@@ -59,7 +49,6 @@ protected:
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
 
-	void ToggleCrouch();
 			
 
 protected:
@@ -74,19 +63,5 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
-
-protected:
-	UPROPERTY(EditAnywhere, Category = "Health")
-	float MaxHealth;
-	float CurrentHealth;
-
-	IInteractable* ActorLookingAt;
-
-public:
-	void Damage_Implementation(float value);
-	void Heal_Implementation(float value);
-	void Die_Implementation();
-
-	void InteractWithActor();
 };
 

@@ -1,6 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "TP_ThirdPersonCharacter.h"
+#include "TP_ThirdPerson/TP_ThirdPersonCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -64,33 +64,6 @@ void ATP_ThirdPersonCharacter::BeginPlay()
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
-
-	CurrentHealth = MaxHealth;
-
-	ActorLookingAt = nullptr;
-}
-
-void ATP_ThirdPersonCharacter::Damage_Implementation(float value)
-{
-	if (CurrentHealth <= 0)
-		Die();
-
-	CurrentHealth -= value;
-}
-
-void ATP_ThirdPersonCharacter::Heal_Implementation(float value)
-{
-	CurrentHealth = (CurrentHealth + value) >= MaxHealth ? MaxHealth : CurrentHealth + value;
-}
-
-void ATP_ThirdPersonCharacter::Die_Implementation()
-{
-}
-
-void ATP_ThirdPersonCharacter::InteractWithActor()
-{
-	if (ActorLookingAt)
-		ActorLookingAt->Interact();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -110,12 +83,6 @@ void ATP_ThirdPersonCharacter::SetupPlayerInputComponent(class UInputComponent* 
 
 		//Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ATP_ThirdPersonCharacter::Look);
-
-		//Crouching
-		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Started, this, &ATP_ThirdPersonCharacter::ToggleCrouch);
-
-		//Interact
-		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &ATP_ThirdPersonCharacter::InteractWithActor);
 	}
 
 }
@@ -154,9 +121,4 @@ void ATP_ThirdPersonCharacter::Look(const FInputActionValue& Value)
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
-}
-
-void ATP_ThirdPersonCharacter::ToggleCrouch()
-{
-	GetMovementComponent()->IsCrouching() ? UnCrouch() : Crouch();
 }
